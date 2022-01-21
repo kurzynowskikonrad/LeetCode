@@ -29,7 +29,7 @@ Explanation: The optimal path is 15 -> 20 -> 7 with a path sum of 15 + 20 + 7 = 
 
 Constraints:
 
-    The number of nodes in the tree is in the range [1, 3 * 104].
+    The number of nodes in the tree is in the range [1, 3 * 10^4].
     -1000 <= Node.val <= 1000
 
 Accepted
@@ -53,6 +53,9 @@ Submissions
  * }
  */
 
+// left child index = parent_idx * 2 + 1
+// right child index = parent_idx * 2 + 2
+
 class TreeNode {
 	val: number
 	left: TreeNode | null
@@ -63,17 +66,23 @@ class TreeNode {
 		this.right = right === undefined ? null : right
 	}
 }
-
+// root length range 1 to 30,000
+// root value range -1000 to 1000
+// 30,000 * -1,000 = -30000000
 function maxPathSum(root: TreeNode | null): number {
-	console.log(root)
-	console.log(root.left)
-	console.log(root.right)
-	console.log('braaattt')
-	console.log('braaattt2')
-	console.log('braaattt2')
+	let ans: number = -30000000
 
-	console.log('braaattt2')
-	return root.val
+	const maxPathSumDownFrom = (root: TreeNode | null): number => {
+		if (root == null) return 0
+		let left: number = Math.max(maxPathSumDownFrom(root.left), 0)
+		let right: number = Math.max(maxPathSumDownFrom(root.right), 0)
+		ans = Math.max(ans, root.val + left + right)
+		return root.val + Math.max(left, right)
+	}
+
+	maxPathSumDownFrom(root)
+	return ans
 }
 
-maxPathSum(new TreeNode(1, new TreeNode(2), new TreeNode(3)))
+console.log(maxPathSum(new TreeNode(1, new TreeNode(2), new TreeNode(3))))
+console.log(maxPathSum(new TreeNode(-3)))
